@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_Reconciliation" targetNamespace="http://payment-exception-frontend/processes">
+  <bpmn:process id="Process_Reconciliation" name="Payment Reconciliation" isExecutable="false">
+    <bpmn:startEvent id="Start_DataReceived" name="Payment and settlement data received"><bpmn:outgoing>R1</bpmn:outgoing></bpmn:startEvent>
+    <bpmn:serviceTask id="Task_ValidateData" name="Validate and normalize data"><bpmn:incoming>R1</bpmn:incoming><bpmn:outgoing>R2</bpmn:outgoing></bpmn:serviceTask>
+    <bpmn:businessRuleTask id="Task_AutoMatch" name="Apply automatic matching rules"><bpmn:incoming>R2</bpmn:incoming><bpmn:outgoing>R3</bpmn:outgoing></bpmn:businessRuleTask>
+    <bpmn:exclusiveGateway id="Gateway_Matched" name="Fully matched?"><bpmn:incoming>R3</bpmn:incoming><bpmn:outgoing>R4</bpmn:outgoing><bpmn:outgoing>R5</bpmn:outgoing></bpmn:exclusiveGateway>
+    <bpmn:serviceTask id="Task_RecordMatch" name="Record matched result"><bpmn:incoming>R4</bpmn:incoming><bpmn:incoming>R11</bpmn:incoming><bpmn:outgoing>R12</bpmn:outgoing></bpmn:serviceTask>
+    <bpmn:userTask id="Task_InvestigateVariance" name="Investigate variance"><bpmn:incoming>R5</bpmn:incoming><bpmn:incoming>R10</bpmn:incoming><bpmn:outgoing>R6</bpmn:outgoing></bpmn:userTask>
+    <bpmn:exclusiveGateway id="Gateway_ManualMatch" name="Valid manual match?"><bpmn:incoming>R6</bpmn:incoming><bpmn:outgoing>R7</bpmn:outgoing><bpmn:outgoing>R8</bpmn:outgoing></bpmn:exclusiveGateway>
+    <bpmn:userTask id="Task_ApproveOverride" name="Approve manual match or override"><bpmn:incoming>R7</bpmn:incoming><bpmn:outgoing>R9</bpmn:outgoing></bpmn:userTask>
+    <bpmn:exclusiveGateway id="Gateway_Approved" name="Approved?"><bpmn:incoming>R9</bpmn:incoming><bpmn:outgoing>R10</bpmn:outgoing><bpmn:outgoing>R11</bpmn:outgoing></bpmn:exclusiveGateway>
+    <bpmn:userTask id="Task_RecordDisposition" name="Record unmatched disposition"><bpmn:incoming>R8</bpmn:incoming><bpmn:outgoing>R13</bpmn:outgoing></bpmn:userTask>
+    <bpmn:serviceTask id="Task_CreateException" name="Create or update exception"><bpmn:incoming>R13</bpmn:incoming><bpmn:outgoing>R14</bpmn:outgoing></bpmn:serviceTask>
+    <bpmn:serviceTask id="Task_AuditReport" name="Update audit and reporting"><bpmn:incoming>R12</bpmn:incoming><bpmn:incoming>R14</bpmn:incoming><bpmn:outgoing>R15</bpmn:outgoing></bpmn:serviceTask>
+    <bpmn:endEvent id="End_ReconciliationUpdated" name="Reconciliation updated"><bpmn:incoming>R15</bpmn:incoming></bpmn:endEvent>
+    <bpmn:sequenceFlow id="R1" sourceRef="Start_DataReceived" targetRef="Task_ValidateData" />
+    <bpmn:sequenceFlow id="R2" sourceRef="Task_ValidateData" targetRef="Task_AutoMatch" />
+    <bpmn:sequenceFlow id="R3" sourceRef="Task_AutoMatch" targetRef="Gateway_Matched" />
+    <bpmn:sequenceFlow id="R4" name="Yes" sourceRef="Gateway_Matched" targetRef="Task_RecordMatch" />
+    <bpmn:sequenceFlow id="R5" name="No" sourceRef="Gateway_Matched" targetRef="Task_InvestigateVariance" />
+    <bpmn:sequenceFlow id="R6" sourceRef="Task_InvestigateVariance" targetRef="Gateway_ManualMatch" />
+    <bpmn:sequenceFlow id="R7" name="Yes" sourceRef="Gateway_ManualMatch" targetRef="Task_ApproveOverride" />
+    <bpmn:sequenceFlow id="R8" name="No" sourceRef="Gateway_ManualMatch" targetRef="Task_RecordDisposition" />
+    <bpmn:sequenceFlow id="R9" sourceRef="Task_ApproveOverride" targetRef="Gateway_Approved" />
+    <bpmn:sequenceFlow id="R10" name="No" sourceRef="Gateway_Approved" targetRef="Task_InvestigateVariance" />
+    <bpmn:sequenceFlow id="R11" name="Yes" sourceRef="Gateway_Approved" targetRef="Task_RecordMatch" />
+    <bpmn:sequenceFlow id="R12" sourceRef="Task_RecordMatch" targetRef="Task_AuditReport" />
+    <bpmn:sequenceFlow id="R13" sourceRef="Task_RecordDisposition" targetRef="Task_CreateException" />
+    <bpmn:sequenceFlow id="R14" sourceRef="Task_CreateException" targetRef="Task_AuditReport" />
+    <bpmn:sequenceFlow id="R15" sourceRef="Task_AuditReport" targetRef="End_ReconciliationUpdated" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_Reconciliation"><bpmndi:BPMNPlane id="BPMNPlane_Reconciliation" bpmnElement="Process_Reconciliation">
+    <bpmndi:BPMNShape id="Start_DataReceived_di" bpmnElement="Start_DataReceived"><dc:Bounds x="100" y="172" width="36" height="36" /></bpmndi:BPMNShape>
+    <bpmndi:BPMNShape id="Task_ValidateData_di" bpmnElement="Task_ValidateData"><dc:Bounds x="180" y="150" width="130" height="80" /></bpmndi:BPMNShape>
+    <bpmndi:BPMNShape id="Task_AutoMatch_di" bpmnElement="Task_AutoMatch"><dc:Bounds x="350" y="150" width="140" height="80" /></bpmndi:BPMNShape>
+    <bpmndi:BPMNShape id="Gateway_Matched_di" bpmnElement="Gateway_Matched" isMarkerVisible="true"><dc:Bounds x="530" y="165" width="50" height="50" /></bpmndi:BPMNShape>
+    <bpmndi:BPMNShape id="Task_RecordMatch_di" bpmnElement="Task_RecordMatch"><dc:Bounds x="660" y="70" width="140" height="80" /></bpmndi:BPMNShape>
+    <bpmndi:BPMNShape id="Task_InvestigateVariance_di" bpmnElement="Task_InvestigateVariance"><dc:Bounds x="660" y="250" width="140" height="80" /></bpmndi:BPMNShape>
+    <bpmndi:BPMNShape id="Gateway_ManualMatch_di" bpmnElement="Gateway_ManualMatch" isMarkerVisible="true"><dc:Bounds x="850" y="265" width="50" height="50" /></bpmndi:BPMNShape>
+    <bpmndi:BPMNShape id="Task_ApproveOverride_di" bpmnElement="Task_ApproveOverride"><dc:Bounds x="950" y="250" width="150" height="80" /></bpmndi:BPMNShape>
+    <bpmndi:BPMNShape id="Gateway_Approved_di" bpmnElement="Gateway_Approved" isMarkerVisible="true"><dc:Bounds x="1140" y="265" width="50" height="50" /></bpmndi:BPMNShape>
+    <bpmndi:BPMNShape id="Task_RecordDisposition_di" bpmnElement="Task_RecordDisposition"><dc:Bounds x="950" y="390" width="150" height="80" /></bpmndi:BPMNShape>
+    <bpmndi:BPMNShape id="Task_CreateException_di" bpmnElement="Task_CreateException"><dc:Bounds x="1140" y="390" width="150" height="80" /></bpmndi:BPMNShape>
+    <bpmndi:BPMNShape id="Task_AuditReport_di" bpmnElement="Task_AuditReport"><dc:Bounds x="1330" y="150" width="140" height="80" /></bpmndi:BPMNShape>
+    <bpmndi:BPMNShape id="End_ReconciliationUpdated_di" bpmnElement="End_ReconciliationUpdated"><dc:Bounds x="1520" y="172" width="36" height="36" /></bpmndi:BPMNShape>
+    <bpmndi:BPMNEdge id="R1_di" bpmnElement="R1"><di:waypoint x="136" y="190" /><di:waypoint x="180" y="190" /></bpmndi:BPMNEdge>
+    <bpmndi:BPMNEdge id="R2_di" bpmnElement="R2"><di:waypoint x="310" y="190" /><di:waypoint x="350" y="190" /></bpmndi:BPMNEdge>
+    <bpmndi:BPMNEdge id="R3_di" bpmnElement="R3"><di:waypoint x="490" y="190" /><di:waypoint x="530" y="190" /></bpmndi:BPMNEdge>
+    <bpmndi:BPMNEdge id="R4_di" bpmnElement="R4"><di:waypoint x="555" y="165" /><di:waypoint x="555" y="110" /><di:waypoint x="660" y="110" /></bpmndi:BPMNEdge>
+    <bpmndi:BPMNEdge id="R5_di" bpmnElement="R5"><di:waypoint x="555" y="215" /><di:waypoint x="555" y="290" /><di:waypoint x="660" y="290" /></bpmndi:BPMNEdge>
+    <bpmndi:BPMNEdge id="R6_di" bpmnElement="R6"><di:waypoint x="800" y="290" /><di:waypoint x="850" y="290" /></bpmndi:BPMNEdge>
+    <bpmndi:BPMNEdge id="R7_di" bpmnElement="R7"><di:waypoint x="900" y="290" /><di:waypoint x="950" y="290" /></bpmndi:BPMNEdge>
+    <bpmndi:BPMNEdge id="R8_di" bpmnElement="R8"><di:waypoint x="875" y="315" /><di:waypoint x="875" y="430" /><di:waypoint x="950" y="430" /></bpmndi:BPMNEdge>
+    <bpmndi:BPMNEdge id="R9_di" bpmnElement="R9"><di:waypoint x="1100" y="290" /><di:waypoint x="1140" y="290" /></bpmndi:BPMNEdge>
+    <bpmndi:BPMNEdge id="R10_di" bpmnElement="R10"><di:waypoint x="1165" y="315" /><di:waypoint x="1165" y="350" /><di:waypoint x="730" y="350" /><di:waypoint x="730" y="330" /></bpmndi:BPMNEdge>
+    <bpmndi:BPMNEdge id="R11_di" bpmnElement="R11"><di:waypoint x="1165" y="265" /><di:waypoint x="1165" y="110" /><di:waypoint x="800" y="110" /></bpmndi:BPMNEdge>
+    <bpmndi:BPMNEdge id="R12_di" bpmnElement="R12"><di:waypoint x="800" y="110" /><di:waypoint x="1260" y="110" /><di:waypoint x="1260" y="190" /><di:waypoint x="1330" y="190" /></bpmndi:BPMNEdge>
+    <bpmndi:BPMNEdge id="R13_di" bpmnElement="R13"><di:waypoint x="1100" y="430" /><di:waypoint x="1140" y="430" /></bpmndi:BPMNEdge>
+    <bpmndi:BPMNEdge id="R14_di" bpmnElement="R14"><di:waypoint x="1290" y="430" /><di:waypoint x="1400" y="430" /><di:waypoint x="1400" y="230" /></bpmndi:BPMNEdge>
+    <bpmndi:BPMNEdge id="R15_di" bpmnElement="R15"><di:waypoint x="1470" y="190" /><di:waypoint x="1520" y="190" /></bpmndi:BPMNEdge>
+  </bpmndi:BPMNPlane></bpmndi:BPMNDiagram>
+</bpmn:definitions>
