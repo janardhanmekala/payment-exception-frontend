@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Exception Management Dashboard</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <header class="header">
+        <div>
+            <h1>Exception Management</h1>
+            <p>Review, assign and resolve payment exceptions</p>
+        </div>
+
+        <button class="refresh-btn" onclick="refreshDashboard()">
+            Refresh
+        </button>
+    </header>
+
+    <main class="container">
+
+        <!-- Summary Cards -->
+        <section class="summary-grid">
+
+            <div class="summary-card">
+                <span>Total Exceptions</span>
+                <strong id="totalExceptions">0</strong>
+            </div>
+
+            <div class="summary-card warning">
+                <span>Open</span>
+                <strong id="openExceptions">0</strong>
+            </div>
+
+            <div class="summary-card critical">
+                <span>Critical</span>
+                <strong id="criticalExceptions">0</strong>
+            </div>
+
+            <div class="summary-card success">
+                <span>Resolved</span>
+                <strong id="resolvedExceptions">0</strong>
+            </div>
+
+        </section>
+
+        <!-- Filters -->
+        <section class="filters">
+
+            <input
+                type="text"
+                id="searchInput"
+                placeholder="Search payment or exception..."
+                onkeyup="filterExceptions()"
+            >
+
+            <select id="statusFilter" onchange="filterExceptions()">
+                <option value="All">All Statuses</option>
+                <option value="Open">Open</option>
+                <option value="In Progress">In Progress</option>
+                <option value="Resolved">Resolved</option>
+            </select>
+
+            <select id="priorityFilter" onchange="filterExceptions()">
+                <option value="All">All Priorities</option>
+                <option value="Critical">Critical</option>
+                <option value="High">High</option>
+                <option value="Medium">Medium</option>
+                <option value="Low">Low</option>
+            </select>
+
+        </section>
+
+        <!-- Exception Table -->
+        <section class="table-container">
+
+            <table>
+
+                <thead>
+                    <tr>
+                        <th>Exception ID</th>
+                        <th>Payment ID</th>
+                        <th>Type</th>
+                        <th>Priority</th>
+                        <th>Status</th>
+                        <th>Assigned To</th>
+                        <th>Amount</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+
+                <tbody id="exceptionTable">
+                </tbody>
+
+            </table>
+
+        </section>
+
+    </main>
+
+    <script src="app.js"></script>
+
+</body>
+</html>
