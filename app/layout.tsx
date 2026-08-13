@@ -6,9 +6,16 @@ const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
 const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "ClearFlow | Payment Operations",
-  description: "Payment exception operations dashboard for monitoring exposure, SLA health, and priority work.",
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000"),
+  title: "ClearFlow | Exceptions Dashboard",
+  description: "Prioritize payment exceptions, protect SLAs, and manage operational exposure in one focused workspace.",
   icons: { icon: "/favicon.svg", shortcut: "/favicon.svg" },
+  openGraph: {
+    title: "ClearFlow | Exceptions Dashboard",
+    description: "Prioritize payment exceptions, protect SLAs, and keep payment operations moving.",
+    images: [{ url: "/og.png", width: 1200, height: 630, alt: "ClearFlow Exceptions Dashboard" }],
+  },
+  twitter: { card: "summary_large_image", images: ["/og.png"] },
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
