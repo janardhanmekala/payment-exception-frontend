@@ -14,17 +14,17 @@ async function render() {
   );
 }
 
-test("server-renders the ClearFlow exceptions dashboard", async () => {
+test("server-renders the ClearFlow reconciliation dashboard", async () => {
   const response = await render();
   assert.equal(response.status, 200);
   assert.match(response.headers.get("content-type") ?? "", /^text\/html\b/i);
 
   const html = await response.text();
-  assert.match(html, /<title>ClearFlow \| Exceptions Dashboard<\/title>/i);
-  assert.match(html, /Exceptions dashboard/);
-  assert.match(html, /Priority work queue/);
-  assert.match(html, /EXC-28491/);
-  assert.match(html, /94\.8%/);
+  assert.match(html, /<title>ClearFlow \| Reconciliation Dashboard<\/title>/i);
+  assert.match(html, /Reconciliation dashboard/);
+  assert.match(html, /Reconciliation queue/);
+  assert.match(html, /PAY-849201/);
+  assert.match(html, /98\.6%/);
   assert.doesNotMatch(html, /codex-preview|Building your site|react-loading-skeleton/i);
 });
 
@@ -34,10 +34,10 @@ test("ships finished product metadata and social preview", async () => {
     readFile(new URL("../app/layout.tsx", import.meta.url), "utf8"),
   ]);
 
-  assert.match(page, /setPriority\("Critical"\)/);
+  assert.match(page, /setStatus\("Unmatched"\)/);
   assert.match(page, /setSelected\(row\)/);
-  assert.match(layout, /ClearFlow \| Exceptions Dashboard/);
-  assert.match(layout, /\/og\.png/);
-  await access(new URL("../public/og.png", import.meta.url));
+  assert.match(layout, /ClearFlow \| Reconciliation Dashboard/);
+  assert.match(layout, /\/og-reconciliation\.png/);
+  await access(new URL("../public/og-reconciliation.png", import.meta.url));
   await assert.rejects(access(new URL("../app/_sites-preview", import.meta.url)));
 });
