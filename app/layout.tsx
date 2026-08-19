@@ -7,15 +7,15 @@ const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"]
 
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000"),
-  title: "ClearFlow | Reconciliation Dashboard",
-  description: "Monitor payment settlement accuracy, investigate unmatched records, and close reconciliation gaps in one focused workspace.",
+  title: "ClearFlow | Assignment Dashboard",
+  description: "Prioritize payment exceptions, balance analyst workloads, and keep every assignment within SLA.",
   icons: { icon: "/favicon.svg", shortcut: "/favicon.svg" },
   openGraph: {
-    title: "ClearFlow | Reconciliation Dashboard",
-    description: "Monitor settlement accuracy and resolve reconciliation breaks before close.",
-    images: [{ url: "/og-reconciliation.png", width: 1200, height: 630, alt: "ClearFlow Reconciliation Dashboard" }],
+    title: "ClearFlow | Assignment Dashboard",
+    description: "Prioritize exceptions, balance analyst workloads, and protect every payment SLA.",
+    images: [{ url: "/og.png", width: 1200, height: 630, alt: "ClearFlow Assignment Dashboard" }],
   },
-  twitter: { card: "summary_large_image", images: ["/og-reconciliation.png"] },
+  twitter: { card: "summary_large_image", images: ["/og.png"] },
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
