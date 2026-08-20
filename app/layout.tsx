@@ -7,13 +7,13 @@ const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"]
 
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000"),
-  title: "ClearFlow | Assignment Dashboard",
-  description: "Prioritize payment exceptions, balance analyst workloads, and keep every assignment within SLA.",
+  title: "ClearFlow | Reports Dashboard",
+  description: "Monitor payment exception trends, settlement health, and team performance.",
   icons: { icon: "/favicon.svg", shortcut: "/favicon.svg" },
   openGraph: {
-    title: "ClearFlow | Assignment Dashboard",
-    description: "Prioritize exceptions, balance analyst workloads, and protect every payment SLA.",
-    images: [{ url: "/og.png", width: 1200, height: 630, alt: "ClearFlow Assignment Dashboard" }],
+    title: "ClearFlow | Reports Dashboard",
+    description: "Monitor payment exception trends, settlement health, and team performance.",
+    images: [{ url: "/og.png", width: 1200, height: 630, alt: "ClearFlow Reports Dashboard" }],
   },
   twitter: { card: "summary_large_image", images: ["/og.png"] },
 };
